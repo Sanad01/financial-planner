@@ -52,11 +52,6 @@ class IncomeScreen(QWidget):
         self.box6 = QLineEdit(self)
 
         self.text_boxes = [self.box1, self.box2, self.box3, self.box4, self.box5, self.box6]
-        self.text_box_numbers = []  # only contains values of each text box
-
-        #insert the number in each box in a list
-
-
 
         self.row1 = QHBoxLayout(self)
         self.row1.setAlignment(Qt.AlignCenter)
@@ -109,7 +104,7 @@ class IncomeScreen(QWidget):
         main_layout.addLayout(self.row3)
 
         question1.setVisible(True)
-        #fade for first question before pressing next
+        # fade for first question before pressing next
         self.fade_animation(question1)
         self.fade_animation(self.box1)
         self.setLayout(main_layout)
@@ -170,7 +165,7 @@ class IncomeScreen(QWidget):
         self.animation.setStartValue(0.0)
         self.animation.setEndValue(1.0)
         self.animation.setEasingCurve(QEasingCurve.InOutQuad)
-        self.animations.append(self.animation)
+        self.animations.append(self.animation) # prevent garbage collection of animation
         self.animation.start()
 
     def go_back(self):

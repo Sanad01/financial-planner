@@ -1,11 +1,9 @@
 import sys
-
-from PyQt5.QtCore import pyqtSignal, QObject
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import pyqtSignal, QObject, Qt
 from PyQt5.QtSql import QSqlQuery
-from PyQt5.QtWidgets import QWidget, QPushButton, QVBoxLayout, QHBoxLayout, QLabel, QInputDialog, QMessageBox, \
-    QListWidget
+from PyQt5.QtWidgets import QWidget, QPushButton, QVBoxLayout, QHBoxLayout, QLabel, QInputDialog, QMessageBox, QListWidget
 from PyQt5.QtGui import QPixmap, QIcon
+
 from app.GUI.fonts import title_font, text_font, list_widget_style, button_style1a, button_style3
 from app.methods.methods import play_music
 from app.GUI.fonts import button_style1, input_dialog_style1
@@ -24,7 +22,6 @@ class StartScreen(QWidget):
 
         self.init_ui()
 
-
         # self.music_player = play_music()
         # self.music_player.play()
 
@@ -34,15 +31,13 @@ class StartScreen(QWidget):
 
         main_layout = QHBoxLayout()
 
-        self.col1 = self.create_col1()
-
-        self.col2 = self.create_col2()
-
+        col1 = self.create_col1()
+        col2 = self.create_col2()
         col3 = self.create_col3()
 
         # Add columns to the main layout
-        main_layout.addLayout(self.col1)
-        main_layout.addLayout(self.col2)
+        main_layout.addLayout(col1)
+        main_layout.addLayout(col2)
         main_layout.addLayout(col3)
 
         self.setLayout(main_layout)
@@ -153,9 +148,6 @@ class StartScreen(QWidget):
                 self.go_to_income_screen()
             else:
                 self.show_input_dialog()
-
-
-        # self.select_button = QPushButton("Select")
 
     # emits the signal to transition
     def go_to_income_screen(self):

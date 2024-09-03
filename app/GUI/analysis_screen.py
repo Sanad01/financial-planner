@@ -77,12 +77,10 @@ class AnalysisScreen(QWidget):
         self.row5 = QHBoxLayout(self)
         self.analysis5 = QLabel(f"you spend {self.loans_percent}% of your income on recurring payments", self)
 
-
         # change font in text body
         lines = [self.analysis1, self.analysis2, self.analysis3, self.analysis4, self.analysis5]
         for text in lines:
             text.setFont(text_font(text_style1(text)))
-
 
         # add text to row
         rows = [self.row1, self.row2, self.row3, self.row4, self.row5]
@@ -91,8 +89,6 @@ class AnalysisScreen(QWidget):
 
             col1.addLayout(row)
             col1.addSpacing(150)
-
-
 
         return col1
 
@@ -113,8 +109,6 @@ class AnalysisScreen(QWidget):
         button_style1a(back_button)
         row2.addWidget(back_button)
         row2.addWidget(continue_button)
-
-
 
         col2.addLayout(row1)
         col2.addLayout(row2)
@@ -151,10 +145,7 @@ class AnalysisScreen(QWidget):
             timer.setSingleShot(True)
             # Make the label visible and start the animation
             timer.timeout.connect(animation.start)
-
             timer.start(delay)
-
-
             # Store the animation and timer
             self.animations.append((animation, timer))
             delay += 500
