@@ -2,16 +2,17 @@ import sys
 
 from PyQt5.QtSql import QSqlQuery
 from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QPushButton, QMainWindow
-from app.GUI.question_screen import QuestionScreen
-from app.GUI.start_screen import StartScreen
-from app.GUI.analysis_screen import AnalysisScreen
-from app.GUI.income_screen import IncomeScreen
-from app.GUI.home_screen import HomeScreen
 from PyQt5.QtWidgets import QDialog
 from PyQt5.QtCore import QPropertyAnimation, Qt, QAbstractAnimation, pyqtSignal
 from PyQt5 import QtWidgets
 from data.database import DatabaseManager
 from PyQt5.uic import loadUi
+
+from app.GUI.start_screen import StartScreen
+from app.GUI.analysis_screen import AnalysisScreen
+from app.GUI.income_screen import IncomeScreen
+from app.GUI.home_screen import HomeScreen
+from app.GUI.question_screen import QuestionScreen
 
 
 class ScreenManager(QMainWindow):
