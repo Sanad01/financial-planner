@@ -4,6 +4,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtSql import QSqlQuery
 from PyQt5.QtWidgets import QWidget, QLineEdit, QPushButton, QVBoxLayout, QHBoxLayout, QLabel, QMessageBox
 from PyQt5.QtGui import QIntValidator
+
 from app.GUI.fonts import check_box, title_font, text_box_style, button_style1a
 from data.database import DatabaseManager
 
