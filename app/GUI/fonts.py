@@ -1,7 +1,6 @@
 from PyQt5.QtGui import QFont
 from PyQt5.QtWidgets import QPushButton, QLabel, QInputDialog, QListWidget, QLineEdit, QCheckBox
 
-
 def title_font(title) -> QFont:
     title.setStyleSheet("""
                         QLabel {
