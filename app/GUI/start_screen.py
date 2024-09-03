@@ -144,12 +144,12 @@ class StartScreen(QWidget):
         self.input_dialog = QInputDialog(self)
         self.input_dialog.setWindowFlags(self.input_dialog.windowFlags() | Qt.FramelessWindowHint) # remove window frame
         self.input_dialog.setWindowTitle("plan name")
-        self.input_dialog.setLabelText("enter a cool name for your plan: ")
+        self.input_dialog.setLabelText("enter a name for your plan: ")
         input_dialog_style1(self.input_dialog)
         if self.input_dialog.exec_() == QInputDialog.Accepted:
             self.screen_manager.name = self.input_dialog.textValue()
             if self.screen_manager.name:  # Check if the user entered text
-                print("name gotted")
+                print("name entered")
                 self.go_to_income_screen()
             else:
                 self.show_input_dialog()
