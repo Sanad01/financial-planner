@@ -28,10 +28,6 @@ class AnalysisScreen(QWidget):
         self.set_percent_values(data)
         self.init_ui()
 
-
-
-
-
     def init_ui(self):
         self.resize(1920, 1080)
 
