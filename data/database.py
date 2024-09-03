@@ -2,7 +2,6 @@ import sys
 from PyQt5.QtSql import QSqlDatabase, QSqlQuery
 from PyQt5.QtWidgets import QMessageBox
 
-
 class DatabaseManager:
 
     def __init__(self):
@@ -113,4 +112,3 @@ class DatabaseManager:
             # return a list of plan names and a dict that contains names and income values
         return names, self.plan_dict
 
-   # def load_plan(self, plan_name: dict, key):

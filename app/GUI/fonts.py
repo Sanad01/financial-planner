@@ -14,7 +14,6 @@ def title_font2(title) -> QFont:
     title = QFont("Open Sans", 40, QFont.Bold)
     return title
 
-
 def text_font(text) -> QFont:
     text = QFont("Roboto", 15)
     return text
@@ -26,8 +25,6 @@ def text_font2(text):
                     font-size: 24px;
                     }
                     """)
-
-
 
 def button_style1(button: QPushButton):
     button.setStyleSheet("""
@@ -51,7 +48,6 @@ def button_style1(button: QPushButton):
                         }
                         
                     """)
-
 
 def button_style1a(button: QPushButton):
     button.setStyleSheet("""
@@ -79,7 +75,6 @@ def button_style1a(button: QPushButton):
                             border: 1px solid black;
                         }
                     """)
-
 
 def button_style2(button: QPushButton):
     button.setStyleSheet("""
@@ -124,8 +119,6 @@ def button_style3(button: QPushButton):
                         }
                     """)
 
-
-
 def text_style1(text: QLabel):
     text.setStyleSheet("""
                         QLabel {
@@ -139,8 +132,6 @@ def text_style1(text: QLabel):
                             cursor: pointer;
                         }
                     """)
-
-
 
 def input_dialog_style1(box: QInputDialog):
     box.setStyleSheet("""

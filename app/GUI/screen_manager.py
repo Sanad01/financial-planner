@@ -25,8 +25,6 @@ class ScreenManager(QMainWindow):
         self.question_screen = QuestionScreen(self)
         self.analysis_screen = None
         self.home_screen = None
-
-
         self.db = DatabaseManager()
         self.name = None
 
@@ -41,9 +39,6 @@ class ScreenManager(QMainWindow):
 
         # signals for screen transitions
         self.start_screen.goToIncome.connect(self.go_to_income_screen)
-
-
-
 
     def go_to_income_screen(self):
         if self.income_screen is None:
@@ -73,7 +68,6 @@ class ScreenManager(QMainWindow):
 
         self.widget.addWidget(self.home_screen)
         self.widget.setCurrentWidget(self.home_screen)
-
 
     def go_to_start_screen(self):
         self.widget.setCurrentWidget(self.start_screen)
