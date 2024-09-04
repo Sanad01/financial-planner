@@ -24,13 +24,14 @@ class HomeScreen(QWidget):
 
         self.calendar_boxes = []
         for i in range(31):
-            frame = QFrame(self)
+            frame = ClickableFrame(self)
             frame.setStyleSheet("background-color: white;")
             frame.setMaximumSize(90, 90)
+            frame.setFrameShape(QFrame.StyledPanel)
+            frame.clicked.connect(self.on_frame_click)
             frame_layout = QHBoxLayout(frame)
             day_num = QLabel(str(i), frame)
             day_num.setAlignment(Qt.AlignTop)
-            frame.setFrameShape(QFrame.StyledPanel)
             frame_layout.addWidget(day_num)
             self.calendar_boxes.append(frame)
 
@@ -78,6 +79,7 @@ class HomeScreen(QWidget):
         main_layout.addLayout(row1)
         self.setLayout(main_layout)
 
-        def on_frame_click
+    def on_frame_click(self, *args):
+        print("frame was clicked successfuly")
 
     # def calendar_box(self, box):
