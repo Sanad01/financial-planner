@@ -5,8 +5,7 @@ def title_font(title) -> QFont:
     title.setStyleSheet("""
                         QLabel {
                         color: #00AB2E;
-                        font-size: 60px;
-                        text-align: center;
+                        font-size: 65px;
                         }
                         """)
 

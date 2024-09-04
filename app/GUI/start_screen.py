@@ -95,11 +95,10 @@ class StartScreen(QWidget):
 
     def create_col2(self):
         col2 = QVBoxLayout()
-
         row1 = QHBoxLayout()
         row2 = QHBoxLayout()
 
-        intro_text = QLabel("Financial Planner", self)
+        intro_text = QLabel("BUDGETEER    ", self)
         title_font(intro_text)
         row1.addWidget(intro_text)
         col2.addLayout(row1)
