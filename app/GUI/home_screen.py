@@ -20,8 +20,19 @@ class HomeScreen(QWidget):
     def init_ui(self):
         main_layout = QVBoxLayout(self)
         row1 = QHBoxLayout(self)
-        grid = QGridLayout(self)
+        self.grid = QGridLayout(self)
+        self.create_calendar()
 
+        row1.addSpacing(int(self.screen_manager.width()/5))
+        row1.addLayout(self.grid)
+        row1.addSpacing(int(self.screen_manager.width()/5))
+        main_layout.addLayout(row1)
+        self.setLayout(main_layout)
+
+    def on_frame_click(self, *args):
+        print("clicked")
+
+    def create_calendar(self):
         self.calendar_boxes = []
         for i in range(31):
             frame = ClickableFrame(self)
@@ -52,7 +63,7 @@ class HomeScreen(QWidget):
             day_label.setFrameShadow(QFrame.Raised)
             day_label.setAlignment(Qt.AlignCenter)
             day_label.resize(self.calendar_boxes[1].width(), self.calendar_boxes[1].height())
-            grid.addWidget(day_label, 0, i)  # row 0, column i
+            self.grid.addWidget(day_label, 0, i)  # row 0, column i
 
         now = datetime.now()
         current_year = now.year
@@ -70,16 +81,5 @@ class HomeScreen(QWidget):
                 if row == 1 and col < first_day_of_month:
                     continue  # Skip the cells before the first day of the month
                 if day_counter <= days_in_month:
-                    grid.addWidget(self.calendar_boxes[day_counter], row, col)
+                    self.grid.addWidget(self.calendar_boxes[day_counter], row, col)
                     day_counter += 1
-
-        row1.addSpacing(int(self.screen_manager.width()/5))
-        row1.addLayout(grid)
-        row1.addSpacing(int(self.screen_manager.width()/5))
-        main_layout.addLayout(row1)
-        self.setLayout(main_layout)
-
-    def on_frame_click(self, *args):
-        print("frame was clicked successfuly")
-
-    # def calendar_box(self, box):
