@@ -29,8 +29,14 @@ class HomeScreen(QWidget):
         main_layout.addLayout(row1)
         self.setLayout(main_layout)
 
-    def on_frame_click(self, *args):
-        print("clicked")
+    def on_frame_click(self, frame, *args):
+        for i in range(self.grid.count()):
+            grid_widget = self.grid.itemAt(i).widget()
+            if not isinstance(grid_widget, QLabel): # don't affect the day labels (Sun, Mon...)
+                if hasattr(grid_widget, 'selected') and grid_widget.selected:
+                    grid_widget.setStyleSheet("background-color: white;")
+        frame.setStyleSheet("background-color: gray;")
+
 
     def create_calendar(self):
         self.calendar_boxes = []
@@ -39,7 +45,7 @@ class HomeScreen(QWidget):
             frame.setStyleSheet("background-color: white;")
             frame.setMaximumSize(90, 90)
             frame.setFrameShape(QFrame.StyledPanel)
-            frame.clicked.connect(self.on_frame_click)
+            frame.clicked.connect(lambda qframe = frame: self.on_frame_click(qframe))
             frame_layout = QHBoxLayout(frame)
             day_num = QLabel(str(i), frame)
             day_num.setAlignment(Qt.AlignTop)
@@ -63,7 +69,7 @@ class HomeScreen(QWidget):
             day_label.setFrameShadow(QFrame.Raised)
             day_label.setAlignment(Qt.AlignCenter)
             day_label.resize(self.calendar_boxes[1].width(), self.calendar_boxes[1].height())
-            self.grid.addWidget(day_label, 0, i)  # row 0, column i
+            self.grid.addWidget(day_label, 0, i)
 
         now = datetime.now()
         current_year = now.year
@@ -76,8 +82,8 @@ class HomeScreen(QWidget):
 
         # Place buttons for each day of the month
         day_counter = 0
-        for row in range(1, 7):  # Up to 6 weeks in a month
-            for col in range(7):  # 7 days in a week
+        for row in range(1, 7):
+            for col in range(7):
                 if row == 1 and col < first_day_of_month:
                     continue  # Skip the cells before the first day of the month
                 if day_counter <= days_in_month:

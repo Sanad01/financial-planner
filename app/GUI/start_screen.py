@@ -11,7 +11,7 @@ from data.database import DatabaseManager
 
 
 class StartScreen(QWidget):
-    goToIncome = pyqtSignal()  # create signal for transition to inxoem screen
+    goToIncome = pyqtSignal()  # create signal for transition to income screen
 
     def __init__(self, screen_manager):
         super().__init__()
@@ -22,8 +22,8 @@ class StartScreen(QWidget):
 
         self.init_ui()
 
-        # self.music_player = play_music()
-        # self.music_player.play()
+        self.music_player = play_music()
+        self.music_player.play()
 
     def init_ui(self):
         self.resize(1920, 1080)

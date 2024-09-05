@@ -11,5 +11,4 @@ class ClickableFrame(QFrame):
     def mousePressEvent(self, a0):
         self.clicked.emit()
         self.selected = True
-        self.setStyleSheet("background-color: red;")
         super().mousePressEvent(a0)
