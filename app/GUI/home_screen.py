@@ -1,6 +1,6 @@
 from PyQt5.QtCore import pyqtSignal, Qt
 from PyQt5.QtWidgets import QWidget, QGridLayout, QLabel, QPushButton, QVBoxLayout, QHBoxLayout, QFrame, QTableWidget, \
-    QDateEdit, QComboBox, QLineEdit
+    QDateEdit, QComboBox, QLineEdit, QTableWidgetItem
 from PyQt5.QtWidgets import QHeaderView
 from PyQt5.QtGui import QFont
 import calendar
@@ -17,18 +17,18 @@ class HomeScreen(QWidget):
         self.db = DatabaseManager()
         self.screen_manager = screen_manager
         self.data = {
-            1: ["category", "amount", "description"],
-            2: ["category", "amount", "description"],
-            3: ["category", "amount", "description"],
-            4: ["category", "amount", "description"],
-            5: ["category", "amount", "description"],
-            6: ["category", "amount", "description"],
-            7: ["category", "amount", "description"],
-            8: ["category", "amount", "description"],
-            9: ["category", "amount", "description"],
-            10: ["category", "amount", "description"]
+            1: [],
+            2: [],
+            3: [],
+            4: [],
+            5: [],
+            6: [],
+            7: [],
+            8: [],
+            9: [],
+            10: []
         }
-
+        print(self.data)
         self.init_ui()
 
     def init_ui(self):
@@ -58,6 +58,7 @@ class HomeScreen(QWidget):
         row3 = QHBoxLayout(self)
         row3.addSpacing(int(self.screen_manager.width()/3))
         self.add_button = QPushButton("Add Expense", self)
+        self.add_button.clicked.connect(self.add_expense)
         self.delete_button = QPushButton("Delete Expense", self)
         row3.addWidget(self.add_button)
         row3.addWidget(self.delete_button)
@@ -67,10 +68,10 @@ class HomeScreen(QWidget):
         row4.addSpacing(int(self.screen_manager.width()/3))
         table_columns = 3
         table_rows = 10
-        day_table = QTableWidget(table_rows, table_columns, self)
-        day_table.setHorizontalHeaderLabels(["Category", "Amount", "Description"])
-        day_table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
-        row4.addWidget(day_table)
+        self.day_table = QTableWidget(table_rows, table_columns, self)
+        self.day_table.setHorizontalHeaderLabels(["Category", "Amount", "Description"])
+        self.day_table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        row4.addWidget(self.day_table)
         row4.addSpacing(int(self.screen_manager.width()/3))
 
         main_layout.addLayout(row1)
@@ -140,16 +141,22 @@ class HomeScreen(QWidget):
                     self.grid.addWidget(self.calendar_boxes[day_counter], row, col)
                     day_counter += 1
 
-    def add_expense(self, combo_box: QComboBox, text_box1: QLineEdit, text_box2: QLineEdit):
-        category = combo_box.currentText()
-        amount = int(text_box1.text().replace(',', ''))
-        description = str(text_box2.text())
+    def add_expense(self):
+        category = self.dropdown.currentText()
+        amount = int(self.amount.text().replace(',', ''))
+        description = str(self.description.text())
+        inserted_data = [category, amount, description]
 
         first_key_with_null = None
         # find the first key with a null value
         for key, value in self.data.items():
-            if value is None:
+            if not value:
                 first_key_with_null = key
+                print(first_key_with_null)
                 break
         if first_key_with_null:
-            self.data[first_key_with_null] = [category, amount, description]
+            self.data[first_key_with_null] = inserted_data
+
+            for column, item in enumerate(inserted_data):
+                table_item = QTableWidgetItem(str(item))
+                self.day_table.setItem(first_key_with_null - 1, column, table_item)
