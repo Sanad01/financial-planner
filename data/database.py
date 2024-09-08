@@ -93,17 +93,30 @@ class DatabaseManager:
     def insert_plan_name(self, name):
         query = QSqlQuery()
 
-        query.prepare('''INSERT INTO answers (name)
-                                     VALUES (?)''')
-        query.addBindValue(name)
+        try:
+            self.db.transaction()
 
-        if not query.exec_():
-            # Detailed error handling
-            error = query.lastError()
-            print(f"Error inserting data: {error.text()}")
-            print(f"SQL query: {query.executedQuery()}")
-        else:
-            print("Name inserted successfully.")
+            query.prepare('''INSERT INTO answers (name)
+                             VALUES (?)''')
+            query.addBindValue(name)
+            if not query.exec_():
+                raise Exception("Insert into table1 failed")
+
+            query.prepare('''INSERT INTO expenses (name)
+                             VALUES (?)''')
+            query.addBindValue(name)
+            if not query.exec_():
+                raise Exception("Insert into table2 failed")
+
+            if not self.db.commit():
+                raise Exception("Commit failed")
+
+            print("Data inserted successfully")
+
+        except Exception as e:
+            self.db.rollback()
+            print(f"An error occured: {e}")
+
 
     # for loading a plan
     def fetch_plan(self):
