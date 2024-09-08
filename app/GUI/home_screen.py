@@ -16,6 +16,18 @@ class HomeScreen(QWidget):
         super().__init__()
         self.db = DatabaseManager()
         self.screen_manager = screen_manager
+        self.data = {
+            1: ["category", "amount", "description"],
+            2: ["category", "amount", "description"],
+            3: ["category", "amount", "description"],
+            4: ["category", "amount", "description"],
+            5: ["category", "amount", "description"],
+            6: ["category", "amount", "description"],
+            7: ["category", "amount", "description"],
+            8: ["category", "amount", "description"],
+            9: ["category", "amount", "description"],
+            10: ["category", "amount", "description"]
+        }
 
         self.init_ui()
 
@@ -34,6 +46,7 @@ class HomeScreen(QWidget):
         row2.addSpacing(int(self.screen_manager.width()/3))
         # self.date_box = QDateEdit()
         self.dropdown = QComboBox(self)
+        self.dropdown.addItems(["Food", "Groceries", "shopping", "other"])
         self.amount = QLineEdit()
         self.description = QLineEdit(self)
         # row2.addWidget(self.date_box)
@@ -127,4 +140,16 @@ class HomeScreen(QWidget):
                     self.grid.addWidget(self.calendar_boxes[day_counter], row, col)
                     day_counter += 1
 
-   # def create_table(self):
+    def add_expense(self, combo_box: QComboBox, text_box1: QLineEdit, text_box2: QLineEdit):
+        category = combo_box.currentText()
+        amount = int(text_box1.text().replace(',', ''))
+        description = str(text_box2.text())
+
+        first_key_with_null = None
+        # find the first key with a null value
+        for key, value in self.data.items():
+            if value is None:
+                first_key_with_null = key
+                break
+        if first_key_with_null:
+            self.data[first_key_with_null] = [category, amount, description]
