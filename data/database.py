@@ -6,7 +6,8 @@ class DatabaseManager:
 
     def __init__(self):
         self.create_connection()
-        self.create_table()
+        self.create_answers_table()
+        self.create_expense_table()
         # self.print_table_schema()
         self.plan_dict = {}
         self.fetch_plan()
@@ -21,7 +22,7 @@ class DatabaseManager:
         else:
             print("Database connected successfully.")
 
-    def create_table(self):
+    def create_answers_table(self):
         query = QSqlQuery()
 
         # query.exec_("DROP TABLE IF EXISTS answers")
@@ -30,6 +31,7 @@ class DatabaseManager:
                                (name TEXT NULL PRIMARY KEY, income REAL, rent REAL, utilities REAL,
                                 bills REAL, transportation REAL, loans REAL,
                                 budget REAL)''')
+
     '''
     @staticmethod
     def print_table_schema():
@@ -46,6 +48,13 @@ class DatabaseManager:
                   f"Not Null: {is_not_null}, Default: {default_value}, Primary Key: {is_primary_key}")
                   '''
 
+    def create_expense_table(self):
+        query = QSqlQuery()
+
+        # query.exec_("DROP TABLE IF EXISTS expenses")
+
+        query.exec_('''CREATE TABLE IF NOT EXISTS expenses
+                                       (name TEXT NULL PRIMARY KEY, category TEXT NULL, amount REAL)''')
     def get_percentages(self, plan_name):
         query = QSqlQuery()
         query.prepare('''SELECT income, rent, utilities, bills, transportation, loans, budget 
