@@ -180,7 +180,6 @@ class IncomeScreen(QWidget):
         query = QSqlQuery()
 
         # Calculate budget
-
         budget = data["income"] - self.expenses
 
         print(f"this is your expenses: {self.expenses}")

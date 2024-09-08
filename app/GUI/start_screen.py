@@ -22,8 +22,8 @@ class StartScreen(QWidget):
 
         self.init_ui()
 
-        self.music_player = play_music()
-        self.music_player.play()
+        # self.music_player = play_music()
+        # self.music_player.play()
 
     def init_ui(self):
         self.resize(1920, 1080)

@@ -1,5 +1,7 @@
 from PyQt5.QtCore import pyqtSignal, Qt
-from PyQt5.QtWidgets import QWidget, QGridLayout, QLabel, QPushButton, QVBoxLayout, QHBoxLayout, QFrame
+from PyQt5.QtWidgets import QWidget, QGridLayout, QLabel, QPushButton, QVBoxLayout, QHBoxLayout, QFrame, QTableWidget, \
+    QDateEdit, QComboBox, QLineEdit
+from PyQt5.QtWidgets import QHeaderView
 from PyQt5.QtGui import QFont
 import calendar
 from datetime import datetime
@@ -19,14 +21,49 @@ class HomeScreen(QWidget):
 
     def init_ui(self):
         main_layout = QVBoxLayout(self)
-        row1 = QHBoxLayout(self)
+        main_layout.addSpacing(int(self.screen_manager.height()/4))
         self.grid = QGridLayout(self)
         self.create_calendar()
 
+        row1 = QHBoxLayout(self)
         row1.addSpacing(int(self.screen_manager.width()/5))
         row1.addLayout(self.grid)
         row1.addSpacing(int(self.screen_manager.width()/5))
+
+        row2 = QHBoxLayout(self)
+        row2.addSpacing(int(self.screen_manager.width()/3))
+        # self.date_box = QDateEdit()
+        self.dropdown = QComboBox(self)
+        self.amount = QLineEdit()
+        self.description = QLineEdit(self)
+        # row2.addWidget(self.date_box)
+        row2.addWidget(self.dropdown)
+        row2.addWidget(self.amount)
+        row2.addWidget(self.description)
+        row2.addSpacing(int(self.screen_manager.width()/3))
+
+        row3 = QHBoxLayout(self)
+        row3.addSpacing(int(self.screen_manager.width()/3))
+        self.add_button = QPushButton("Add Expense", self)
+        self.delete_button = QPushButton("Delete Expense", self)
+        row3.addWidget(self.add_button)
+        row3.addWidget(self.delete_button)
+        row3.addSpacing(int(self.screen_manager.width()/3))
+
+        row4 = QHBoxLayout(self)
+        row4.addSpacing(int(self.screen_manager.width()/3))
+        table_columns = 3
+        table_rows = 10
+        day_table = QTableWidget(table_rows, table_columns, self)
+        day_table.setHorizontalHeaderLabels(["Category", "Amount", "Description"])
+        day_table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        row4.addWidget(day_table)
+        row4.addSpacing(int(self.screen_manager.width()/3))
+
         main_layout.addLayout(row1)
+        main_layout.addLayout(row2)
+        main_layout.addLayout(row3)
+        main_layout.addLayout(row4)
         self.setLayout(main_layout)
 
     def on_frame_click(self, frame, *args):
@@ -89,3 +126,5 @@ class HomeScreen(QWidget):
                 if day_counter <= days_in_month:
                     self.grid.addWidget(self.calendar_boxes[day_counter], row, col)
                     day_counter += 1
+
+   # def create_table(self):
