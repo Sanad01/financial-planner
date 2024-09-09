@@ -70,10 +70,14 @@ class HomeScreen(QWidget):
         row4.addSpacing(int(self.screen_manager.width()/3))
         table_columns = 3
         table_rows = 10
-        self.day_table = QTableWidget(table_rows, table_columns, self)
-        self.day_table.setHorizontalHeaderLabels(["Category", "Amount", "Description"])
-        self.day_table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
-        row4.addWidget(self.day_table)
+        self.tables = []
+        for i in range(31):
+            table = QTableWidget(table_rows, table_columns, self)
+            table.setHorizontalHeaderLabels(["Category", "Amount", "Description"])
+            table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+            table.hide()
+            self.tables.append(table)
+            row4.addWidget(table)
         row4.addSpacing(int(self.screen_manager.width()/3))
 
         main_layout.addLayout(row1)
@@ -85,11 +89,11 @@ class HomeScreen(QWidget):
     def on_frame_click(self, frame, *args):
         for i in range(self.grid.count()):
             grid_widget = self.grid.itemAt(i).widget()
-            if not isinstance(grid_widget, QLabel): # don't affect the day labels (Sun, Mon...)
-                if hasattr(grid_widget, 'selected') and grid_widget.selected:
-                    grid_widget.setStyleSheet("background-color: white;")
+            if hasattr(grid_widget, 'selected') and grid_widget.selected:  # don't affect the day labels (Sun, Mon...)
+                grid_widget.setStyleSheet("background-color: white;")
+                self.tables[i].hide()
+                print(self.tables[i])
         frame.setStyleSheet("background-color: gray;")
-
 
     def create_calendar(self):
         self.calendar_boxes = []
@@ -99,6 +103,7 @@ class HomeScreen(QWidget):
             frame.setMaximumSize(90, 90)
             frame.setFrameShape(QFrame.StyledPanel)
             frame.clicked.connect(lambda qframe = frame: self.on_frame_click(qframe))
+            frame.clicked.connect(self.show_day_table)
             frame_layout = QHBoxLayout(frame)
             day_num = QLabel(str(i), frame)
             day_num.setAlignment(Qt.AlignTop)
@@ -163,3 +168,11 @@ class HomeScreen(QWidget):
                 table_item = QTableWidgetItem(str(item))
                 self.day_table.setItem(first_key_with_null - 1, column, table_item)
             self.db.insert_json_data(self.data, first_key_with_null, self.screen_manager.name)
+
+    # shows the table for the relevant day of the month
+    def show_day_table(self):
+        for i, frame in enumerate(self.calendar_boxes):
+            if frame.selected:
+                self.tables[i].show()
+
+
