@@ -2,7 +2,7 @@ from PyQt5.QtCore import pyqtSignal, Qt
 from PyQt5.QtWidgets import QWidget, QGridLayout, QLabel, QPushButton, QVBoxLayout, QHBoxLayout, QFrame, QTableWidget, \
     QDateEdit, QComboBox, QLineEdit, QTableWidgetItem
 from PyQt5.QtWidgets import QHeaderView
-from PyQt5.QtGui import QFont
+from PyQt5.QtGui import QFont, QIntValidator
 import calendar
 from datetime import datetime
 
@@ -48,6 +48,8 @@ class HomeScreen(QWidget):
         self.dropdown = QComboBox(self)
         self.dropdown.addItems(["Food", "Groceries", "shopping", "other"])
         self.amount = QLineEdit()
+        int_validator = QIntValidator(0, 999999999)
+        self.amount.setValidator(int_validator)
         self.description = QLineEdit(self)
         # row2.addWidget(self.date_box)
         row2.addWidget(self.dropdown)
@@ -160,3 +162,4 @@ class HomeScreen(QWidget):
             for column, item in enumerate(inserted_data):
                 table_item = QTableWidgetItem(str(item))
                 self.day_table.setItem(first_key_with_null - 1, column, table_item)
+            self.db.insert_json_data(self.data, first_key_with_null, self.screen_manager.name)
