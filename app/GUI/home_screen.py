@@ -75,7 +75,10 @@ class HomeScreen(QWidget):
             table = QTableWidget(table_rows, table_columns, self)
             table.setHorizontalHeaderLabels(["Category", "Amount", "Description"])
             table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
-            table.hide()
+            if i != datetime.today().day:
+                table.hide()
+            else:
+                table.show()
             self.tables.append(table)
             row4.addWidget(table)
         row4.addSpacing(int(self.screen_manager.width()/3))
@@ -87,13 +90,14 @@ class HomeScreen(QWidget):
         self.setLayout(main_layout)
 
     def on_frame_click(self, frame, *args):
-        for i in range(self.grid.count()):
-            grid_widget = self.grid.itemAt(i).widget()
-            if hasattr(grid_widget, 'selected') and grid_widget.selected:  # don't affect the day labels (Sun, Mon...)
-                grid_widget.setStyleSheet("background-color: white;")
+        for i, box in enumerate(self.calendar_boxes):
+            if hasattr(box, 'selected') and box.selected:  # don't affect the day labels (Sun, Mon...)
+                box.setStyleSheet("background-color: white;")
                 self.tables[i].hide()
-                print(self.tables[i])
+                box.selected = False
+        frame.selected = True
         frame.setStyleSheet("background-color: gray;")
+
 
     def create_calendar(self):
         self.calendar_boxes = []
@@ -102,12 +106,14 @@ class HomeScreen(QWidget):
             frame.setStyleSheet("background-color: white;")
             frame.setMaximumSize(90, 90)
             frame.setFrameShape(QFrame.StyledPanel)
-            frame.clicked.connect(lambda qframe = frame: self.on_frame_click(qframe))
+            frame.clicked.connect(lambda qframe=frame: self.on_frame_click(qframe))
             frame.clicked.connect(self.show_day_table)
             frame_layout = QHBoxLayout(frame)
             day_num = QLabel(str(i), frame)
             day_num.setAlignment(Qt.AlignTop)
             frame_layout.addWidget(day_num)
+            if i == datetime.today().day:
+                frame.click()  # select the frame corresponding to the current daty of the month
             self.calendar_boxes.append(frame)
 
         days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sunday']
@@ -174,5 +180,3 @@ class HomeScreen(QWidget):
         for i, frame in enumerate(self.calendar_boxes):
             if frame.selected:
                 self.tables[i].show()
-
-

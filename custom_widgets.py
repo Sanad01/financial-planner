@@ -6,9 +6,11 @@ class ClickableFrame(QFrame):
 
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.selected = False
+        self.selected = None
 
     def mousePressEvent(self, a0):
         self.clicked.emit()
-        self.selected = True
         super().mousePressEvent(a0)
+
+    def click(self):
+        self.clicked.emit()
