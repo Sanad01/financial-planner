@@ -225,11 +225,11 @@ def check_box(box: QCheckBox):
 def table_style(table: QTableWidget):
     table.setStyleSheet("""
         QTableWidget::item {
-            background-color: rgba(128, 128, 128, 80);
+            background-color: rgba(128, 128, 128, 100);
             border: 1px outset black;
         }
         QHeaderView::section { 
-            background-color: rgba(104, 255, 81, 100); 
+            background-color: #4CAF50; 
             color: black;
             font-weight: bold;
         }

@@ -36,15 +36,27 @@ class HomeScreen(QWidget):
     def init_ui(self):
         main_layout = QVBoxLayout(self)
         main_layout.addSpacing(int(self.screen_manager.height()/13))
-        self.grid = QGridLayout(self)
+        outer_frame = QFrame(self)
+        outer_frame.setFrameShape(QFrame.Panel)  # Set the frame shape to Box (border around the frame)
+        outer_frame.setStyleSheet("background-color: #A1662F;")  # Brown border around the frame
+
+        inner_frame = QFrame(outer_frame)
+        inner_frame.setFrameShape(QFrame.Panel)  # Set the frame shape to Box (border around the frame)
+        inner_frame.setStyleSheet("background-color: white;")  # Brown border around the frame
+        self.grid = QGridLayout(inner_frame)
         self.create_calendar()
 
 
         # first row
+        calendar_frame_layout = QVBoxLayout(outer_frame)
+        calendar_frame_layout.addWidget(inner_frame)
+        outer_frame.setLayout(calendar_frame_layout)
+
+        # Create row1 layout
         row1 = QHBoxLayout(self)
-        row1.addSpacing(int(self.screen_manager.width()/5))
-        row1.addLayout(self.grid)
-        row1.addSpacing(int(self.screen_manager.width()/5))
+        row1.addSpacing(int(self.screen_manager.width()/3))  # Add stretchable space
+        row1.addWidget(outer_frame)
+        row1.addSpacing(int(self.screen_manager.width()/3))  # Add stretchable space
 
         # second row
         row2 = QHBoxLayout(self)
