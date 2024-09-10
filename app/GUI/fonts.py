@@ -1,5 +1,6 @@
 from PyQt5.QtGui import QFont
-from PyQt5.QtWidgets import QPushButton, QLabel, QInputDialog, QListWidget, QLineEdit, QCheckBox
+from PyQt5.QtWidgets import QPushButton, QLabel, QInputDialog, QListWidget, QLineEdit, QCheckBox, QTableWidget
+
 
 def title_font(title) -> QFont:
     title.setStyleSheet("""
@@ -168,27 +169,27 @@ def input_dialog_style1(box: QInputDialog):
 
 def list_widget_style(list: QListWidget):
     list.setStyleSheet("""
-                QListWidget {
-                    background-color: #cccfcd;
-                    border: 4px solid black;  
-                    padding: 7px;             
-                    margin: 2px;             
-                }
-                QListWidget::item:text {
-                    border: 3px solid black;
-                    background-color: #4CAF50;
-                    padding: 7px;
-                    margin: 2px;
-                    color: black;
-                    font-size: 14px;
-                }
-                QListWidget::item:hover{
-                background-color: green;
-                }
-                QListWidget::item:selected{
-                background-color: gold;
-                }
-            """)
+        QListWidget {
+            background-color: #cccfcd;
+            border: 4px solid black;  
+            padding: 7px;             
+            margin: 2px;             
+        }
+        QListWidget::item:text {
+            border: 3px solid black;
+            background-color: #4CAF50;
+            padding: 7px;
+            margin: 2px;
+            color: black;
+            font-size: 14px;
+        }
+        QListWidget::item:hover{
+        background-color: green;
+        }
+        QListWidget::item:selected{
+        background-color: gold;
+        }
+    """)
 
 def text_box_style(text_box: QLineEdit):
     text_box.setStyleSheet("""
@@ -203,20 +204,33 @@ def text_box_style(text_box: QLineEdit):
 
 def check_box(box: QCheckBox):
     box.setStyleSheet("""
-    QCheckBox::indicator {
-        width: 20px;
-        height: 20px;
-    }
-    QCheckBox::indicator:unchecked {
-        background-color: lightgray;
-        border: 2px solid gray;
-    }
-    QCheckBox::indicator:checked {
-        background-color: green;
-        border: 2px solid darkgreen;
-    }
-    QCheckBox {
-        color: black;
-        font-size: 30px;
-    }
-    """)
+        QCheckBox::indicator {
+            width: 20px;
+            height: 20px;
+        }
+        QCheckBox::indicator:unchecked {
+            background-color: lightgray;
+            border: 2px solid gray;
+        }
+        QCheckBox::indicator:checked {
+            background-color: green;
+            border: 2px solid darkgreen;
+        }
+        QCheckBox {
+            color: black;
+            font-size: 30px;
+        }
+        """)
+
+def table_style(table: QTableWidget):
+    table.setStyleSheet("""
+        QTableWidget::item {
+            background-color: rgba(128, 128, 128, 80);
+            border: 1px outset black;
+        }
+        QHeaderView::section { 
+            background-color: rgba(104, 255, 81, 100); 
+            color: black;
+            font-weight: bold;
+        }
+        """)
