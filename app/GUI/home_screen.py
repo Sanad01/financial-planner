@@ -8,7 +8,7 @@ from datetime import datetime
 
 from data.database import DatabaseManager
 from custom_widgets import ClickableFrame
-from app.GUI.fonts import table_style
+from app.GUI.fonts import table_style, text_box_style1, combobox_style, button_style4
 
 
 class HomeScreen(QWidget):
@@ -38,21 +38,19 @@ class HomeScreen(QWidget):
         main_layout.addSpacing(int(self.screen_manager.height()/13))
         outer_frame = QFrame(self)
         outer_frame.setFrameShape(QFrame.Panel)  # Set the frame shape to Box (border around the frame)
-        outer_frame.setStyleSheet("background-color: #A1662F;")  # Brown border around the frame
+        outer_frame.setStyleSheet("background-color: #A1662F;")
 
         inner_frame = QFrame(outer_frame)
         inner_frame.setFrameShape(QFrame.Panel)  # Set the frame shape to Box (border around the frame)
-        inner_frame.setStyleSheet("background-color: white;")  # Brown border around the frame
+        inner_frame.setStyleSheet("background-color: white;")
         self.grid = QGridLayout(inner_frame)
         self.create_calendar()
-
 
         # first row
         calendar_frame_layout = QVBoxLayout(outer_frame)
         calendar_frame_layout.addWidget(inner_frame)
         outer_frame.setLayout(calendar_frame_layout)
 
-        # Create row1 layout
         row1 = QHBoxLayout(self)
         row1.addSpacing(int(self.screen_manager.width()/3))  # Add stretchable space
         row1.addWidget(outer_frame)
@@ -63,10 +61,19 @@ class HomeScreen(QWidget):
         row2.addSpacing(int(self.screen_manager.width()/3))
         self.dropdown = QComboBox(self)
         self.dropdown.addItems(["Food", "Groceries", "shopping", "other"])
-        self.amount = QLineEdit()
+        combobox_style(self.dropdown)
+
+        self.amount = QLineEdit(self)
+        self.amount.setPlaceholderText("Enter amount here")
+        text_box_style1(self.amount)
         int_validator = QIntValidator(0, 999999999)
         self.amount.setValidator(int_validator)
+        self.amount.textEdited.connect(lambda text=self.amount.text(), text_box=self.amount:
+                                       self.screen_manager.add_comma(text_box, text))
+
         self.description = QLineEdit(self)
+        self.description.setPlaceholderText("Enter description here")
+        text_box_style1(self.description)
 
         row2.addWidget(self.dropdown)
         row2.addWidget(self.amount)
@@ -79,7 +86,10 @@ class HomeScreen(QWidget):
 
         self.add_button = QPushButton("Add Expense", self)
         self.add_button.clicked.connect(self.add_expense)
+        button_style4(self.add_button)
+
         self.delete_button = QPushButton("Delete Expense", self)
+        button_style4(self.delete_button)
 
         row3.addWidget(self.add_button)
         row3.addWidget(self.delete_button)
@@ -205,7 +215,7 @@ class HomeScreen(QWidget):
         font.setBold(True)
         font.setPointSize(14)
 
-        days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sunday']
+        days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
         for i, day in enumerate(days):
             day_label = QLabel(day, self)
             day_label.setFont(font)

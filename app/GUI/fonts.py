@@ -1,5 +1,6 @@
 from PyQt5.QtGui import QFont
-from PyQt5.QtWidgets import QPushButton, QLabel, QInputDialog, QListWidget, QLineEdit, QCheckBox, QTableWidget
+from PyQt5.QtWidgets import QPushButton, QLabel, QInputDialog, QListWidget, QLineEdit, QCheckBox, QTableWidget, \
+    QComboBox
 
 
 def title_font(title) -> QFont:
@@ -119,6 +120,25 @@ def button_style3(button: QPushButton):
                         }
                     """)
 
+def button_style4(button: QPushButton):
+    button.setStyleSheet("""
+                        QPushButton {
+                            background-color: #4CAF50;
+                            border: 2px solid black;
+                            color: black; 
+                            padding: 5px;
+                            text-align: center;
+                            display: inline-block;
+                            font-size: 12px;
+                            margin: 2px, 2px;
+                            transition-duration: 0.4s;
+                            cursor: pointer;
+                        }
+                        QPushButton:hover {
+                            background-color: green;
+                        }
+                    """)
+
 def text_style1(text: QLabel):
     text.setStyleSheet("""
                         QLabel {
@@ -224,8 +244,13 @@ def check_box(box: QCheckBox):
 
 def table_style(table: QTableWidget):
     table.setStyleSheet("""
+        QTableView {
+            border: 3px solid black;
+            border-radius: 5px;         
+            background-color: rgba(128, 128, 128, 100);  
+        }
+    
         QTableWidget::item {
-            background-color: rgba(128, 128, 128, 100);
             border: 1px outset black;
         }
         QHeaderView::section { 
@@ -234,3 +259,53 @@ def table_style(table: QTableWidget):
             font-weight: bold;
         }
         """)
+
+def text_box_style1(text_box: QLineEdit):
+    text_box.setStyleSheet("""
+        QLineEdit {
+                background-color: white;  
+                border: 1px solid black;  
+                border-radius: 5px;  
+                padding: 5px;        
+                min-height: 20px;            
+                min-width: 30px;            
+                font-size: 15px;
+            }
+        """)
+
+def combobox_style(box: QComboBox):
+    box.setStyleSheet("""
+        QComboBox {
+            background-color: #4CAF50;   
+            color: white;
+            border: 2px solid #388E3C;  
+            padding: 5px;
+            border-radius: 5px;
+            min-height: 20px;            
+            min-width: 30px;            
+            font-size: 15px;
+        }
+
+        QComboBox:hover {
+            background-color: #388E3C;   /* Darker green on hover */
+        }
+
+        QComboBox::drop-down {
+            background-color: #4CAF50;
+            border-left: 2px solid #388E3C; /* Darker green for the drop-down button */
+        }
+
+        QComboBox QAbstractItemView {
+            background-color: #212121;  /* Dark background for the dropdown list */
+            color: white;               /* Text color for the items */
+            selection-background-color: gold; /* Gold when selected */
+            selection-color: black;      /* Black text when selected */
+            border-radius: 5px;
+            padding: 5px;
+        }
+
+        QComboBox::item {
+            padding: 10px;
+        }
+
+    """)
