@@ -1,4 +1,8 @@
+import json
+import os.path
+
 from PyQt5.QtCore import pyqtSignal, Qt
+from PyQt5.QtSql import QSqlQuery
 from PyQt5.QtWidgets import QWidget, QGridLayout, QLabel, QPushButton, QVBoxLayout, QHBoxLayout, QFrame, QTableWidget, \
     QDateEdit, QComboBox, QLineEdit, QTableWidgetItem
 from PyQt5.QtWidgets import QHeaderView
@@ -17,20 +21,8 @@ class HomeScreen(QWidget):
         super().__init__()
         self.db = DatabaseManager()
         self.screen_manager = screen_manager
-        self.data = {
-            1: [],
-            2: [],
-            3: [],
-            4: [],
-            5: [],
-            6: [],
-            7: [],
-            8: [],
-            9: [],
-            10: []
-        }
         self.tables = []
-        print(self.data)
+        self.data = {}
         self.init_ui()
 
     def init_ui(self):
@@ -85,7 +77,7 @@ class HomeScreen(QWidget):
         row3.addSpacing(int(self.screen_manager.width()/3))
 
         self.add_button = QPushButton("Add Expense", self)
-        self.add_button.clicked.connect(self.add_expense)
+        self.add_button.clicked.connect(self.insert_json_info)
         button_style4(self.add_button)
 
         self.delete_button = QPushButton("Delete Expense", self)
@@ -227,3 +219,57 @@ class HomeScreen(QWidget):
             day_label.setAlignment(Qt.AlignCenter)
             day_label.resize(self.calendar_boxes[1].width(), self.calendar_boxes[1].height())
             self.grid.addWidget(day_label, 0, i)
+
+    def insert_json_info(self):
+        # Fetch category, amount, and description from UI
+        category = self.dropdown.currentText()
+        amount = str(self.amount.text().replace(',', ''))
+        description = str(self.description.text())
+        inserted_data = [category, amount, description]
+
+        # Initialize current date
+        year = str(datetime.today().year)
+        month = str(datetime.today().month)
+        day = str(datetime.today().day)
+
+        # Fetch existing json_expenses from the database for the given name
+        query = QSqlQuery()
+        query.prepare("SELECT json_expenses FROM answers WHERE name = :name")
+        query.bindValue(":name", self.screen_manager.name)
+
+        if query.exec_() and query.next():
+            json_expenses_str = query.value(0)
+            print(json_expenses_str)
+            if json_expenses_str:
+                data = json.loads(json_expenses_str)  # Convert JSON string back to Python dict
+            else:
+                data = {}
+        else:
+            print("Error fetching data:", query.lastError().text())
+            data = {}
+
+        # Insert the new data for the current date
+        if year not in data:
+            data[year] = {}
+            print(data[year])
+        if month not in data[year]:
+            data[year][month] = {}
+            print(data[year][month])
+        if day not in data[year][month]:
+            data[year][month][day] = []
+            print(data[year][month][day])
+
+        # Add the new entry to the existing data
+        data[year][month][day].append([category, amount, description])
+
+        # Convert updated data back to JSON string
+        updated_json_expenses = json.dumps(data)
+
+        # Update the database with the new json_expenses data
+        update_query = QSqlQuery()
+        update_query.prepare("UPDATE answers SET json_expenses = :json_expenses WHERE name = :name")
+        update_query.bindValue(":json_expenses", updated_json_expenses)
+        update_query.bindValue(":name", self.screen_manager.name)
+
+        if not update_query.exec_():
+            print("Error updating json_expenses:", update_query.lastError().text())
