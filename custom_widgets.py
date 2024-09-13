@@ -14,3 +14,6 @@ class ClickableFrame(QFrame):
 
     def click(self):
         self.clicked.emit()
+
+    def random(self):
+        query.prepare("SELECT json_expenses FROM answers WHERE :name=name ")

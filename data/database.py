@@ -136,31 +136,4 @@ class DatabaseManager:
         return names, self.plan_dict
 
 
-    def insert_json_data(self, data: dict, index: int, plan_name):
-        query = QSqlQuery()
-
-        json_path = f"$.{index}"
-        value = json.dumps(data[index])
-
-        query.prepare('''
-               UPDATE answers
-               SET 
-                   json_expenses = json_insert(
-                       COALESCE(json_expenses, '{}'), 
-                       :json_path, 
-                       :value
-                   )
-               WHERE
-                   name = :plan_name
-           ''')
-
-        # Bind values to the placeholders
-        query.bindValue(':json_path', json_path)
-        query.bindValue(':value', value)
-        query.bindValue(':plan_name', plan_name)
-
-        # Execute the query
-        if not query.exec_():
-            print(f"Error updating JSON data: {query.lastError().text()}")
-
 

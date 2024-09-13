@@ -164,26 +164,6 @@ class HomeScreen(QWidget):
                     self.grid.addWidget(self.calendar_boxes[day_counter], row, col)
                     day_counter += 1
 
-    def add_expense(self):
-        category = self.dropdown.currentText()
-        amount = int(self.amount.text().replace(',', ''))
-        description = str(self.description.text())
-        inserted_data = [category, amount, description]
-
-        first_key_with_null = None
-        # find the first key with a null value
-        for key, value in self.data.items():
-            if not value:
-                first_key_with_null = key
-                print(first_key_with_null)
-                break
-        if first_key_with_null:
-            self.data[first_key_with_null] = inserted_data
-
-            for column, item in enumerate(inserted_data):
-                table_item = QTableWidgetItem(str(item))
-                self.day_table.setItem(first_key_with_null - 1, column, table_item)
-            self.db.insert_json_data(self.data, first_key_with_null, self.screen_manager.name)
 
     # shows the table for the relevant day of the month
     def show_day_table(self):
@@ -230,7 +210,17 @@ class HomeScreen(QWidget):
         # Initialize current date
         year = str(datetime.today().year)
         month = str(datetime.today().month)
-        day = str(datetime.today().day)
+        day = None
+
+        for i, frame in enumerate(self.calendar_boxes):
+            if frame.selected:
+                day = i
+                break
+
+        if day is None:
+            print("No day selected!")
+            return
+
 
         # Fetch existing json_expenses from the database for the given name
         query = QSqlQuery()
@@ -248,13 +238,13 @@ class HomeScreen(QWidget):
             print("Error fetching data:", query.lastError().text())
             data = {}
 
-        # Insert the new data for the current date
         if year not in data:
             data[year] = {}
             print(data[year])
         if month not in data[year]:
             data[year][month] = {}
             print(data[year][month])
+
         if day not in data[year][month]:
             data[year][month][day] = []
             print(data[year][month][day])
@@ -262,7 +252,6 @@ class HomeScreen(QWidget):
         # Add the new entry to the existing data
         data[year][month][day].append([category, amount, description])
 
-        # Convert updated data back to JSON string
         updated_json_expenses = json.dumps(data)
 
         # Update the database with the new json_expenses data
