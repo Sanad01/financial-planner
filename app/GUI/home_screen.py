@@ -12,7 +12,7 @@ from datetime import datetime
 
 from data.database import DatabaseManager
 from custom_widgets import ClickableFrame
-from app.GUI.fonts import table_style, text_box_style1, combobox_style, button_style4
+from app.GUI.fonts import table_style, text_box_style1, combobox_style, button_style4, frame_style
 
 
 class HomeScreen(QWidget):
@@ -21,6 +21,7 @@ class HomeScreen(QWidget):
         super().__init__()
         self.db = DatabaseManager()
         self.screen_manager = screen_manager
+        self.init_json()
         self.tables = []
         self.data = {}
         self.init_ui()
@@ -121,7 +122,9 @@ class HomeScreen(QWidget):
         for i, box in enumerate(self.calendar_boxes):
             if hasattr(box, 'selected') and box.selected:  # don't affect the day labels (Sun, Mon...)
                 box.setStyleSheet("background-color: white;")
+                self.tables[i].clear()
                 self.tables[i].hide()
+                self.tables[i].setHorizontalHeaderLabels(["Category", "Amount", "Description"])  # don't clear header
                 box.selected = False
         frame.selected = True
         frame.setStyleSheet("background-color: gray;")
@@ -131,7 +134,6 @@ class HomeScreen(QWidget):
         self.calendar_boxes = []
         for i in range(31):
             frame = ClickableFrame(self)
-            frame.setStyleSheet("background-color: white;")
             frame.setMaximumSize(90, 90)
             frame.setFrameShape(QFrame.StyledPanel)
             frame.clicked.connect(lambda qframe=frame: self.on_frame_click(qframe))
@@ -170,6 +172,7 @@ class HomeScreen(QWidget):
         for i, frame in enumerate(self.calendar_boxes):
             if frame.selected:
                 self.tables[i].show()
+                self.restore_table_info(self.tables[i], str(i))
 
 
     def adjust_table_height(self, table: QTableWidget):
@@ -214,7 +217,7 @@ class HomeScreen(QWidget):
 
         for i, frame in enumerate(self.calendar_boxes):
             if frame.selected:
-                day = i
+                day = str(i)
                 break
 
         if day is None:
@@ -229,7 +232,100 @@ class HomeScreen(QWidget):
 
         if query.exec_() and query.next():
             json_expenses_str = query.value(0)
-            print(json_expenses_str)
+            if json_expenses_str:
+                data = json.loads(json_expenses_str)  # Convert JSON string back to Python dict
+            else:
+                data = {}
+        else:
+            print("Error fetching data:", query.lastError().text())
+            data = {}
+
+        if day not in data[year][month]:
+            data[year][month][day] = []
+
+        # Add the new entry to the existing data
+        data[year][month][day].append(category)
+        data[year][month][day].append(amount)
+        data[year][month][day].append(description)
+
+        updated_json_expenses = json.dumps(data, indent=4, sort_keys=True)
+
+        # Update the database with the new json_expenses data
+        update_query = QSqlQuery()
+        update_query.prepare("UPDATE answers SET json_expenses = :json_expenses WHERE name = :name")
+        update_query.bindValue(":json_expenses", updated_json_expenses)
+        update_query.bindValue(":name", self.screen_manager.name)
+
+        if not update_query.exec_():
+            print("Error updating json_expenses:", update_query.lastError().text())
+
+        # update the qtable with the data entered
+        self.update_table(data, year, month, day)
+
+    def update_table(self, data: dict, year: str, month: str, day: str):
+        category = self.dropdown.currentText()
+        amount = str(self.amount.text().replace(',', ''))
+        description = str(self.description.text())
+        inserted_data = [category, amount, description]
+
+        current_table = None
+        for i, table in enumerate(self.tables):
+            if table.isVisible():
+                current_table = table
+                break
+            else:
+                current_table = None
+
+        row_count = current_table.rowCount()
+        col_count = current_table.columnCount()
+
+        for row in range(row_count):
+            if current_table.item(row, 0) is None:  # Find the first empty row
+                for col in range(col_count):
+                    if col < len(data[year][month][day]):
+                        item = QTableWidgetItem(inserted_data[col])
+                        current_table.setItem(row, col, item)
+                break  # Exit after filling the first empty row
+
+    def restore_table_info(self, table: QTableWidget, day: str):
+        year = str(datetime.today().year)
+        month = str(datetime.today().month)
+
+        query = QSqlQuery()
+        query.prepare("SELECT json_expenses FROM answers WHERE name = :name")
+        query.bindValue(":name", self.screen_manager.name)
+
+        data = {}
+        if query.exec_() and query.next():
+            json_expenses_str = query.value(0)
+            data = json.loads(json_expenses_str)  # Convert JSON string back to Python dict
+
+        if data and year in data and month in data[year] and day in data[year][month]:
+            row_count = table.rowCount()
+            col_count = table.columnCount()
+            items_count = 0
+
+            for row in range(row_count):
+                if items_count < len(data[year][month][day]):
+                    for col in range(col_count):
+                        if col < 3:
+                            item = QTableWidgetItem(data[year][month][day][items_count])
+                            table.setItem(row, col, item)
+                            items_count += 1
+                        else:
+                            break
+
+
+    def init_json(self):
+        year = str(datetime.today().year)
+        month = str(datetime.today().month)
+
+        query = QSqlQuery()
+        query.prepare("SELECT json_expenses FROM answers WHERE name = :name")
+        query.bindValue(":name", self.screen_manager.name)
+
+        if query.exec_() and query.next():
+            json_expenses_str = query.value(0)
             if json_expenses_str:
                 data = json.loads(json_expenses_str)  # Convert JSON string back to Python dict
             else:
@@ -240,21 +336,11 @@ class HomeScreen(QWidget):
 
         if year not in data:
             data[year] = {}
-            print(data[year])
         if month not in data[year]:
             data[year][month] = {}
-            print(data[year][month])
 
-        if day not in data[year][month]:
-            data[year][month][day] = []
-            print(data[year][month][day])
+        updated_json_expenses = json.dumps(data, indent=4, sort_keys=True)
 
-        # Add the new entry to the existing data
-        data[year][month][day].append([category, amount, description])
-
-        updated_json_expenses = json.dumps(data)
-
-        # Update the database with the new json_expenses data
         update_query = QSqlQuery()
         update_query.prepare("UPDATE answers SET json_expenses = :json_expenses WHERE name = :name")
         update_query.bindValue(":json_expenses", updated_json_expenses)
@@ -262,3 +348,5 @@ class HomeScreen(QWidget):
 
         if not update_query.exec_():
             print("Error updating json_expenses:", update_query.lastError().text())
+
+

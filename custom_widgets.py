@@ -1,6 +1,7 @@
 from PyQt5.QtWidgets import QFrame
 from PyQt5.QtCore import pyqtSignal
 
+
 class ClickableFrame(QFrame):
     clicked = pyqtSignal()
 
@@ -14,6 +15,3 @@ class ClickableFrame(QFrame):
 
     def click(self):
         self.clicked.emit()
-
-    def random(self):
-        query.prepare("SELECT json_expenses FROM answers WHERE :name=name ")

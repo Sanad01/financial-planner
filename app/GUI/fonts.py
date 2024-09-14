@@ -1,6 +1,6 @@
 from PyQt5.QtGui import QFont
 from PyQt5.QtWidgets import QPushButton, QLabel, QInputDialog, QListWidget, QLineEdit, QCheckBox, QTableWidget, \
-    QComboBox
+    QComboBox, QFrame
 
 
 def title_font(title) -> QFont:
@@ -245,13 +245,18 @@ def check_box(box: QCheckBox):
 def table_style(table: QTableWidget):
     table.setStyleSheet("""
         QTableView {
-            border: 3px solid black;
+            border: 2px solid black;
             border-radius: 5px;         
             background-color: rgba(128, 128, 128, 100);  
         }
     
         QTableWidget::item {
-            border: 1px outset black;
+            border: 3px solid #BDBDBD;
+            border-radius: 4px;
+            background-color: #F0F0F0;
+            padding: 4px;
+            border-style: outset;
+            box-shadow: 1px 1px 2px #888888;
         }
         QHeaderView::section { 
             background-color: #4CAF50; 
@@ -307,5 +312,14 @@ def combobox_style(box: QComboBox):
         QComboBox::item {
             padding: 10px;
         }
+    """)
 
+def frame_style(frame: QFrame):
+    frame.setStyleSheet("""
+        QFrame {
+        background-color: #F0F0F0;
+        border-style: inset;
+        box-shadow: 4px 4px 8px #666666;  /* Creates the shadow for a 3D effect */
+        }
+    
     """)
