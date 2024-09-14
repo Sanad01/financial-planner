@@ -105,6 +105,7 @@ class HomeScreen(QWidget):
             if i != datetime.today().day:
                 table.hide()
             else:
+                self.restore_table_info(table, str(i))  # restore db data as soon as home_screen is open
                 table.show()
             self.tables.append(table)
             row4.addWidget(table)
