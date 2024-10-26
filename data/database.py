@@ -16,7 +16,7 @@ class DatabaseManager:
 
     def create_connection(self):
         self.db = QSqlDatabase.addDatabase("QSQLITE")
-        self.db.setDatabaseName("C:/Users/sanad/planner/general_info.db")
+        self.db.setDatabaseName("C:/Users/sanad/Documents/GitHub/financial-planner/general_info.db")
         if not self.db.open():
             QMessageBox.Critical(None, "Error", "Could not open your db")
             sys.exit(1)
