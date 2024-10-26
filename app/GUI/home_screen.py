@@ -94,7 +94,7 @@ class HomeScreen(QWidget):
 
         table_columns = 3
         table_rows = 10
-        for i in range(31):
+        for i in range(32):
             table = QTableWidget(table_rows, table_columns, self)
             table.setHorizontalHeaderLabels(["Category", "Amount", "Description"])
             table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
@@ -133,7 +133,7 @@ class HomeScreen(QWidget):
 
     def create_calendar(self):
         self.calendar_boxes = []
-        for i in range(31):
+        for i in range(32):
             frame = ClickableFrame(self)
             frame.setMaximumSize(90, 90)
             frame.setFrameShape(QFrame.StyledPanel)
@@ -158,7 +158,8 @@ class HomeScreen(QWidget):
         first_day_of_month = calendar.monthrange(current_year, current_month)[0]
         print(f"this is the first_day_of_month {first_day_of_month}")
 
-        day_counter = 0
+        day_counter = 1
+
         for row in range(1, 7):
             for col in range(7):
                 if row == 1 and col < first_day_of_month:
