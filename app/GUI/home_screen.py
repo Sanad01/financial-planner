@@ -156,15 +156,14 @@ class HomeScreen(QWidget):
 
         # Get the first day of the month (0 = Monday, 6 = Sunday)
         first_day_of_month = calendar.monthrange(current_year, current_month)[0]
-        print(f"this is the first_day_of_month {first_day_of_month}")
 
-        day_counter = 1
+        day_counter = 0
 
         for row in range(1, 7):
             for col in range(7):
                 if row == 1 and col < first_day_of_month:
                     continue  # Skip the cells before the first day of the month
-                if day_counter <= days_in_month:
+                if day_counter < days_in_month:
                     self.grid.addWidget(self.calendar_boxes[day_counter], row, col)
                     day_counter += 1
 
