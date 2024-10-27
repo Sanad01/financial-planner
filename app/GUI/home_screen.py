@@ -133,19 +133,20 @@ class HomeScreen(QWidget):
 
     def create_calendar(self):
         self.calendar_boxes = []
-        for i in range(32):
+        for i in range(31):
             frame = ClickableFrame(self)
             frame.setMaximumSize(90, 90)
             frame.setFrameShape(QFrame.StyledPanel)
             frame.clicked.connect(lambda qframe=frame: self.on_frame_click(qframe))
             frame.clicked.connect(self.show_day_table)
             frame_layout = QHBoxLayout(frame)
-            day_num = QLabel(str(i), frame)
+            day_num = QLabel(str(i+1), frame)
             day_num.setAlignment(Qt.AlignTop)
             frame_layout.addWidget(day_num)
             if i == datetime.today().day:
                 frame.click()  # select the frame corresponding to the current daty of the month
             self.calendar_boxes.append(frame)
+            print(f"this is the size of calendar_boxes{len(self.calendar_boxes)}")
 
         self.create_day_labels()
 
@@ -153,6 +154,7 @@ class HomeScreen(QWidget):
         current_year = now.year
         current_month = now.month
         days_in_month = calendar.monthrange(current_year, current_month)[1]
+        print(f"these are the days in this month {days_in_month}")
 
         # Get the first day of the month (0 = Monday, 6 = Sunday)
         first_day_of_month = calendar.monthrange(current_year, current_month)[0]
