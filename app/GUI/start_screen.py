@@ -1,5 +1,5 @@
 import sys
-from PyQt5.QtCore import pyqtSignal, QObject, Qt
+from PyQt5.QtCore import pyqtSignal, QObject, Qt, QPropertyAnimation, QRect
 from PyQt5.QtSql import QSqlQuery
 from PyQt5.QtWidgets import QWidget, QPushButton, QVBoxLayout, QHBoxLayout, QLabel, QInputDialog, QMessageBox, QListWidget
 from PyQt5.QtGui import QPixmap, QIcon
@@ -8,6 +8,7 @@ from app.GUI.fonts import title_font, text_font, list_widget_style, button_style
 from app.methods.methods import play_music
 from app.GUI.fonts import button_style1, input_dialog_style1
 from data.database import DatabaseManager
+from custom_widgets import HoverFilter
 
 
 class StartScreen(QWidget):
@@ -19,7 +20,6 @@ class StartScreen(QWidget):
         self.screen_manager = screen_manager
         self.name = None
         self.create_list()
-
         self.init_ui()
 
         # self.music_player = play_music()
@@ -40,6 +40,22 @@ class StartScreen(QWidget):
         main_layout.addLayout(col2)
         main_layout.addLayout(col3)
 
+        test_button = QPushButton("TEST")
+
+        self.hover_filter = HoverFilter()
+        test_button.installEventFilter(self.hover_filter)
+        self.hover_filter.HoverEnter.connect(lambda: self.expand_button_animation(test_button))
+
+        button_width = test_button.sizeHint().width()
+        button_height = test_button.sizeHint().height()
+        center_x = (self.width() - button_width) // 2
+        center_y = (self.height() - button_height) // 2
+
+        # Set the button position to the center of the window
+        test_button.setGeometry(center_x, center_y, button_width, button_height)
+        test_button.show()
+
+
         self.setLayout(main_layout)
 
     def create_col1(self):
@@ -51,10 +67,11 @@ class StartScreen(QWidget):
         row4 = QHBoxLayout()
 
         # Start button
-        start_button = QPushButton("-  Start New Plan")
-        start_button.clicked.connect(self.list_cancel)
-        start_button.clicked.connect(self.show_input_dialog)  # closes load plan list if open
-        row1.addWidget(start_button)
+        self.start_button = QPushButton("-  Start New Plan")
+        self.start_button.clicked.connect(self.list_cancel)
+        self.start_button.clicked.connect(self.show_input_dialog)  # closes load plan list if open
+
+        row1.addWidget(self.start_button)
         row1.addStretch(1)
 
         # load plan button
@@ -78,10 +95,10 @@ class StartScreen(QWidget):
         row4.addWidget(exit_button)
         row4.addStretch(1)
 
-        buttons = [start_button, self.load_plan_button, settings_button, exit_button]
+        buttons = [self.start_button, self.load_plan_button, settings_button, exit_button]
         for button in buttons:
             button_style1(button)
-            button.setFixedWidth(start_button.sizeHint().width() + 50)
+            button.setFixedWidth(self.start_button.sizeHint().width() + 50)
             text_font(button)
 
         col1.addStretch(1)
@@ -222,3 +239,11 @@ class StartScreen(QWidget):
 
     def button_width(self, button: QPushButton):
         button.setFixedWidth(button.sizeHint().width() + 50)
+
+    def expand_button_animation(self, button: QPushButton):
+        button_pos = self.get_button_pos(button)
+        animation = QPropertyAnimation(button, b"geometry")
+        animation.setDuration(200)
+        animation.setStartValue(QRect(button_pos.y(), button_pos.x(), button.width(), button.height()))
+        animation.setEndValue(QRect(button_pos.y(), button_pos.x(), button.width(), button.height()+20))
+        animation.start()

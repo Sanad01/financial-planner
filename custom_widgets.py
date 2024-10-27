@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import QFrame
-from PyQt5.QtCore import pyqtSignal
+from PyQt5.QtCore import pyqtSignal, QObject, Qt, QEvent
 
 
 class ClickableFrame(QFrame):
@@ -15,3 +15,16 @@ class ClickableFrame(QFrame):
 
     def click(self):
         self.clicked.emit()
+
+class HoverFilter(QObject):
+    HoverEnter = pyqtSignal()
+    HoverLeft = pyqtSignal()
+
+    def eventFilter(self, obj, event):
+        if event.type() == QEvent.HoverEnter:
+            self.HoverEnter.emit()
+            print("Hovered over button!")
+        elif event.type() == QEvent.HoverLeave:
+            self.HoverLeft.emit()
+            print("Hover left button!")
+        return super().eventFilter(obj, event)
